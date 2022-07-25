@@ -45,5 +45,25 @@ userRouter.post('/verify',(req,res)=>{
     })
 })
 
+userRouter.post('/sendEmail', (req, res) => {
+    let {
+        email , 
+        code
+    } = req.body;
+    let verify = new Verify({
+        code,
+        email
+    })
+
+    verify.save((err, doc) => {
+        if (err) {
+            res.status(400).send({ message: 'Cannot Add Verifiy Record ', err })
+        } else {
+            sendMail(email, code);
+            res.status(200).json({ code })
+        }
+    })
+})
+
 
 module.exports = userRouter;
